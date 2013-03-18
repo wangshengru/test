@@ -1,0 +1,112 @@
+package com.example.file;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Date;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainActivity extends Activity {
+  private TextView myText =null;
+	private Button mybtn = null;
+	private Button pbtn = null;
+	private Button vbtn = null;
+	private Button sbtn = null;
+	private Button fbtn = null;
+	private Button hbtn = null;
+	private Button bbtn = null;
+	
+	private RimeFile myFile = null;
+	private File newFile = null;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		myFile = new RimeFile();
+		myText = (TextView)findViewById(R.id.MyText);
+		mybtn = (Button)findViewById(R.id.notebtn);
+		/*pbtn = (Button)findViewById(R.id.addPbtn);
+		vbtn = (Button)findViewById(R.id.addVbtn);
+		sbtn = (Button)findViewById(R.id.addSbtn);
+		fbtn = (Button)findViewById(R.id.addFbtn);
+		hbtn = (Button)findViewById(R.id.addHbtn);*/
+		bbtn = (Button)findViewById(R.id.addBbtn);
+		mybtn.setOnClickListener(new NoteBtnListener());
+		bbtn.setOnClickListener(new BBtnListener());
+	}
+	
+	public class NoteBtnListener implements OnClickListener{
+
+		@Override
+		public void onClick(View v) {
+			
+			if(myFile.isHaveSD()){
+				Toast.makeText(MainActivity.this, "手机上有SD卡",Toast.LENGTH_LONG).show();
+			}
+			try {
+				newFile = myFile.createNewNote();
+				myText.setText(newFile.getName());
+			} catch (IOException e) {
+				Toast.makeText(MainActivity.this, "创建新文件时失败",Toast.LENGTH_LONG).show();
+				myText.setText(e.toString());
+			}		
+		}
+		
+	}
+	
+	public class BBtnListener implements OnClickListener{
+
+		@Override
+		public void onClick(View v) {
+			
+			try {
+				InputStream out = null;
+				StringBuffer data = new StringBuffer();
+				data.append("fuck a");
+			
+				myFile.addResToFile(newFile.getName(), "body",null, data.toString().getBytes("utf-8"));
+			} catch (IOException e) {
+				Toast.makeText(MainActivity.this, "写入新文件时失败",Toast.LENGTH_LONG).show();
+				myText.setText(e.toString());
+			}
+			
+			
+		}
+		
+	}
+	/*public class PBtnListener implements OnClickListener{
+
+		@Override
+		public void onClick(View v) {
+			
+			try {
+				
+				myFile.addResToFile(newFile.getName(), "photo", input)
+			} catch (IOException e) {
+				Toast.makeText(MainActivity.this, "创建新文件时失败",Toast.LENGTH_LONG).show();
+				myText.setText(e.toString());
+			}
+			
+			
+		}
+		
+	}*/
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.activity_main, menu);
+		return true;
+	}
+
+}
